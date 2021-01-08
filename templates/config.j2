@@ -1,0 +1,244 @@
+{% if haproxy_config | default(False) %}
+{{ haproxy_config }}
+{% else %}
+global
+  log {{ haproxy_log_address }} {{ haproxy_log_facility }}{{ ' ' + haproxy_log_extra if haproxy_log_extra | default(False) else '' }}
+  chroot /var/lib/haproxy
+
+  stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+  stats timeout 30s
+
+  user haproxy
+  group haproxy
+  daemon
+
+  ca-base /etc/ssl/certs
+  crt-base /etc/ssl/private
+
+{% if haproxy_ssl_ciphers | default(False) %}
+  ssl-default-bind-ciphers {{ haproxy_ssl_ciphers | join(':') }}
+{% endif %}
+{% if haproxy_ssl_ciphersuites | default(False) %}
+  ssl-default-bind-ciphersuites {{ haproxy_ssl_ciphersuites | join(':') }}
+{% endif %}
+{% if haproxy_ssl_options | default(False) %}
+  ssl-default-bind-options prefer-client-ciphers {{ haproxy_ssl_options | join(' ') }}
+{% endif %}
+
+{% if haproxy_ssl_ciphers | default(False) %}
+  ssl-default-server-ciphers {{ haproxy_ssl_ciphers | join(':') }}
+{% endif %}
+{% if haproxy_ssl_ciphersuites | default(False) %}
+  ssl-default-server-ciphersuites {{ haproxy_ssl_ciphersuites | join(':') }}
+{% endif %}
+{% if haproxy_ssl_options | default(False) %}
+  ssl-default-server-options {{ haproxy_ssl_options | join(' ') }}
+{% endif %}
+
+  ssl-dh-param-file /etc/haproxy/dhparam.pem
+
+  tune.maxaccept -1
+  maxconn {{ haproxy_global_maxconn }}
+
+defaults
+  log global
+  mode http
+
+  http-reuse {{ haprxy_http_reuse }}
+  maxconn {{ haproxy_global_maxconn }}
+
+  option redispatch
+  option dontlognull
+
+  timeout connect 5s
+  timeout client 600s
+  timeout server 600s
+  timeout queue 600s
+  timeout tunnel 600s
+
+{% for item in haproxy_error_list %}
+  errorfile {{ item }} /etc/haproxy/errors/{{ item }}.http
+{% endfor %}
+
+listen stats
+  bind 127.0.0.1:1936
+
+  log global
+  mode http
+
+  maxconn 10
+  timeout connect 100s
+  timeout client 100s
+  timeout server 100s
+  timeout queue 100s
+
+  stats enable
+  stats refresh 30s
+  stats show-node
+  stats uri /haproxy?stats
+{% for item in haproxy_userlists %}
+
+userlist {{ item.name }}
+{% for user in item.users %}
+  user {{ user.username }} password {{ user.password }}
+{% endfor %}
+{% endfor %}
+{% if haproxy_peers | default(False) %}
+
+peers cluster
+{% for item in haproxy_peers %}
+  peer {{ item.name }} {{ item.address }}
+{% endfor %}
+{% endif %}
+
+frontend exporter
+   bind {{ haproxy_exporter_binding }}:8404
+
+   option http-use-htx
+   http-request use-service prometheus-exporter if { path /metrics }
+
+frontend incoming
+  bind {{ haproxy_incoming_binding }}:80
+  bind {{ haproxy_incoming_binding }}:443 tfo alpn h2,http/1.1,http/1.0 ssl crt /etc/haproxy/ssl/
+
+  capture request header Host len 255
+  capture request header Referer len 255
+  capture response header Location len 255
+
+  log global
+  mode http
+  log-format '{{ haproxy_http_logging }}'
+
+  http-response set-header Strict-Transport-Security "max-age=63072000"
+{% if haproxy_enable_security_headers %}
+{% if haproxy_content_type_options | default(False) %}
+  http-response set-header X-Content-Type-Options "{{ haproxy_content_type_options }}"
+{% endif %}
+{% if haproxy_frame_options | default(False) %}
+  http-response set-header X-Frame-Options "{{ haproxy_frame_options }}"
+{% endif %}
+{% if haproxy_xss_protection | default(False) %}
+  http-response set-header X-XSS-Protection "{{ haproxy_xss_protection }}"
+{% endif %}
+{% if haproxy_referer_policy | default(False) %}
+  http-response set-header Referrer-Policy "{{ haproxy_referer_policy }}"
+{% endif %}
+{% if haproxy_expect_ct | default(False) %}
+  http-response set-header Expect-CT "{{ haproxy_expect_ct }}"
+{% endif %}
+{% endif %}
+  http-response set-header X-Powered-By Proact
+  http-response set-header X-Powered-Server {{ inventory_hostname }}
+  http-response set-header Server Proxy
+
+  http-request del-header X-Forwarded-For
+  http-request add-header X-Forwarded-Host %[req.hdr(host)]
+  http-request add-header X-Forwarded-Server %[req.hdr(host)]
+  http-request add-header X-Forwarded-Port %[dst_port]
+  http-request add-header X-Forwarded-Proto https
+  http-request set-header X-Forwarded-For %[src]
+
+  option forwardfor except 127.0.0.1
+
+  acl letsencrypt path_beg -i /.well-known/acme-challenge
+  acl http ssl_fc,not
+{% if haproxy_acls | default(False) %}
+
+{% for item in haproxy_acls %}{% if item.state | default('present') == 'present' %}
+  acl {{ item.name }}-network src -f /etc/haproxy/acls/{{ item.name }}.lst
+{% endif %}{% endfor %}
+{% endif %}
+{% if haproxy_userlists | default(False) %}
+
+{% for item in haproxy_userlists %}
+  acl auth-{{ item.name }} http_auth({{ item.name }})
+{% endfor %}
+{% endif %}
+
+  http-request redirect scheme https code 301 if {{ haproxy_sslredirect_filter }}
+
+  use_backend {{ haproxy_letsencrypt_backend }} if letsencrypt
+  {% if haproxy_enable_maintenance | default(False) %}
+  use_backend {{ haproxy_maintenance_backend }}{{ ' if ' + haproxy_maintenance_filter if haproxy_maintenance_filter | default(False) else '' }}
+  {% endif %}
+
+  {{ haproxy_incoming  | indent(width=2, indentfirst=False) | trim }}
+
+  default_backend {{ haproxy_default_backend }}
+{% for frontend in haproxy_frontends %}
+
+frontend {{ frontend.name }}
+{% if frontend.content | default(False) %}
+  {{ frontend.content | indent(width=2, indentfirst=False) | trim }}
+{% endif %}
+{% endfor %}
+
+backend fallback
+  option tcp-smart-connect
+  retry-on all-retryable-errors
+  default-server tfo check
+
+  server localhost 127.0.0.1:81
+
+backend maintenance
+  option tcp-smart-connect
+  retry-on all-retryable-errors
+  default-server tfo check
+
+  http-response set-status 503
+  server localhost 127.0.0.1:81
+{% for backend in haproxy_backends %}
+
+backend {{ backend.name }}
+{% if backend.content | default(False) %}
+  {{ backend.content | indent(width=2, indentfirst=False) | trim }}
+{% else %}
+{% for item in backend.settings | default([]) %}
+  {{ item }}
+{% endfor %}
+{% if backend.smart_connect | default(True) %}
+  option tcp-smart-connect
+{% endif %}
+{% for item in backend.options | default([]) %}
+  option {{ item }}
+{% endfor %}
+{% if backend.retryable_errors | default(True) %}
+  retry-on all-retryable-errors
+{% endif %}
+{% if backend.defaults | default(True) %}
+  default-server {{ backend.defaults | default(['tfo', 'check']) | join(' ') }}
+{% endif %}
+
+{% if backend.csp | default(False) %}
+  http-response set-header Content-Security-Policy "{{ backend.csp }}"
+{% endif %}
+{% for server in backend.servers %}
+  server {{ backend.name }}-{{ '%02d' % loop.index }} {{ server }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% for item in haproxy_blocks %}
+{% if not item.frontends is string and item.frontends is iterable %}
+{% for frontend in item.frontends %}
+
+frontend {{ frontend.name | default(item.name) }}
+  {{ frontend.content | default(frontend) | indent(width=2, indentfirst=False) | trim }}
+{% endfor %}
+{% else %}
+
+frontend {{ item.name }}
+  {{ item.frontends | indent(width=2, indentfirst=False) | trim }}
+{% endif %}
+{% if not item.backends is string and item.backends is iterable %}
+{% for backend in item.backends %}
+
+backend {{ backend.name | default(item.name) }}
+  {{ backend.content | default(backend) | indent(width=2, indentfirst=False) | trim }}
+{% endfor %}
+{% else %}
+
+backend {{ item.name }}
+  {{ item.backends | indent(width=2, indentfirst=False) | trim }}
+{% endif %}
+{% endfor %}
+{% endif %}

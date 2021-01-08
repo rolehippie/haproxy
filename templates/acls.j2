@@ -1,0 +1,7 @@
+{% if not item.whitelist is string and item.whitelist is iterable %}
+{% for whitelist in item.whitelist %}
+{{ whitelist }}
+{% endfor %}
+{% else %}
+{{ item.whitelist }}
+{% endif %}

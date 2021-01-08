@@ -1,0 +1,195 @@
+# Standards: 0.1
+---
+- name: Add apt repository
+  apt_repository:
+    repo: "ppa:vbernat/haproxy-{{ haproxy_version }}"
+    filename: haproxy
+    update_cache: True
+    state: present
+  tags:
+    - haproxy
+
+- name: Install required packages
+  loop:
+    - haproxy
+    - python3-cryptography
+    - python3-openssl
+  package:
+    name: "{{ item }}"
+    state: present
+  tags:
+    - haproxy
+
+- name: Create required directories
+  loop:
+    - /etc/haproxy/ssl
+    - /etc/haproxy/acls
+  file:
+    path: "{{ item }}"
+    state: directory
+  tags:
+    - haproxy
+
+- name: Write ocsp script
+  notify:
+    - Reload haproxy
+  template:
+    src: ocsp.j2
+    dest: /usr/sbin/haproxy-ocsp
+    owner: root
+    group: root
+    mode: u=rwx,g=r,o=r
+  tags:
+    - haproxy
+
+- name: Copy error pages
+  notify:
+    - Reload haproxy
+  copy:
+    src: "{{ haproxy_error_pages }}"
+    dest: /etc/haproxy
+  tags:
+    - haproxy
+
+- name: Create challenge dir
+  file:
+    path: /var/www/html/.well-known/acme-challenge
+    state: directory
+  tags:
+    - haproxy
+
+- name: Private dummy key
+  when: not ansible_check_mode
+  openssl_privatekey:
+    path: /etc/haproxy/selfsigned.key
+    size: 4096
+  tags:
+    - haproxy
+
+- name: Sign dummy request
+  when: not ansible_check_mode
+  openssl_csr:
+    path: /etc/haproxy/selfsigned.csr
+    privatekey_path: /etc/haproxy/selfsigned.key
+    common_name: "{{ ansible_hostname }}"
+    country_name: DE
+    state_or_province_name: Bavaria
+    locality_name: Nuremberg
+    organization_name: Proact
+    organizational_unit_name: DevOps
+    email_address: devops@proactcloud.de
+  tags:
+    - haproxy
+
+- name: Generate dummy cert
+  when: not ansible_check_mode
+  openssl_certificate:
+    csr_path: /etc/haproxy/selfsigned.csr
+    privatekey_path: /etc/haproxy/selfsigned.key
+    path: /etc/haproxy/selfsigned.crt
+    provider: selfsigned
+  tags:
+    - haproxy
+
+- name: Chain dummy cert
+  when: not ansible_check_mode
+  changed_when: False
+  shell: "cat selfsigned.crt selfsigned.key > ssl/000-selfsigned.pem"
+  args:
+    chdir: /etc/haproxy
+  tags:
+    - haproxy
+
+- name: Drop legacy cert
+  file:
+    path: /etc/haproxy/ssl/selfsigned.pem
+    state: absent
+  tags:
+    - haproxy
+
+- name: Check dhparam file
+  register: haproxy_dhparam_file
+  check_mode: False
+  stat:
+    path: /etc/haproxy/dhparam.pem
+  tags:
+    - haproxy
+
+- name: Generate dhparam file
+  notify:
+    - Reload haproxy
+  when: not haproxy_dhparam_file.stat.exists or (ansible_date_time.epoch | int - haproxy_dhparam_file.stat.mtime) > (30 * 60 * 60 * 24)
+  command:
+    cmd: openssl dhparam -out /etc/haproxy/dhparam.pem 2048
+  tags:
+    - haproxy
+
+- name: Create acl definitions
+  notify:
+    - Reload haproxy
+  loop: "{{ haproxy_acls }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.state | default('present') == 'present'
+    - not haproxy_skip_configuration
+  template:
+    src: acls.j2
+    dest: "/etc/haproxy/acls/{{ item.name }}.lst"
+  tags:
+    - haproxy
+
+- name: Remove acl definitions
+  notify:
+    - Reload haproxy
+  loop: "{{ haproxy_acls }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.state | default('present') == 'absent'
+    - not haproxy_skip_configuration
+  file:
+    path: "/etc/haproxy/acls/{{ item.name }}.lst"
+    state: absent
+  tags:
+    - haproxy
+
+- name: Write server config
+  notify:
+    - Reload haproxy
+  when:
+    - not haproxy_skip_configuration
+  template:
+    src: config.j2
+    dest: /etc/haproxy/haproxy.cfg
+    validate: haproxy -c -f %s
+  tags:
+    - haproxy
+
+- name: Create service directory
+  file:
+    path: /etc/systemd/system/haproxy.service.d
+    state: directory
+  tags:
+    - haproxy
+
+- name: Write service override
+  notify:
+    - Reload haproxy
+  template:
+    src: override.j2
+    dest: /etc/systemd/system/haproxy.service.d/override.conf
+  tags:
+    - haproxy
+
+- name: Start haproxy service
+  systemd:
+    name: haproxy
+    state: started
+    daemon_reload: True
+    masked: False
+    enabled: True
+  tags:
+    - haproxy
+
+...

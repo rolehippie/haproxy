@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+shopt -u nullglob
+
+for CERT in /etc/haproxy/ssl/*.pem; do
+    ISSUER_URI=$(openssl x509 -in $CERT -text -noout | grep 'CA Issuers' | cut -d: -f2,3)
+    ISSUER_PEM="${CERT}.issuer"
+
+    if [[ "${ISSUER_URI}" == "" ]]; then
+        continue
+    fi
+
+    wget -q -O- ${ISSUER_URI} | openssl x509 -inform DER -outform PEM -out ${ISSUER_PEM}
+
+    OCSP_URL=$(openssl x509 -noout -ocsp_uri -in ${CERT})
+    OCSP_HOST=$(echo ${OCSP_URL} | cut -d/ -f3)
+    OCSP_FILE="${CERT}.ocsp"
+
+    openssl ocsp -noverify -no_nonce -issuer ${ISSUER_PEM} -cert ${CERT} -url ${OCSP_URL} -header Host=${OCSP_HOST} -respout ${OCSP_FILE}
+done
+
+exit 0
