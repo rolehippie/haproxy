@@ -113,6 +113,7 @@ haproxy_backends:
       - check
     smart_connect: True
     retryable_errors: True
+    conn_failure: False
     csp: True
     servers:
       - server1:8080

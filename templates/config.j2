@@ -175,14 +175,14 @@ frontend {{ frontend.name }}
 
 backend fallback
   option tcp-smart-connect
-  retry-on all-retryable-errors
+  retry-on conn-failure
   default-server tfo check
 
   server localhost 127.0.0.1:81
 
 backend maintenance
   option tcp-smart-connect
-  retry-on all-retryable-errors
+  retry-on conn-failure
   default-server tfo check
 
   http-response set-status 503
@@ -202,7 +202,10 @@ backend {{ backend.name }}
 {% for item in backend.options | default([]) %}
   option {{ item }}
 {% endfor %}
-{% if backend.retryable_errors | default(True) %}
+{% if backend.conn_failure | default(True) %}
+  retry-on conn-failure
+{% endif %}
+{% if backend.retryable_errors | default(False) %}
   retry-on all-retryable-errors
 {% endif %}
 {% if backend.defaults | default(True) %}
