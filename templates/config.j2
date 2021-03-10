@@ -161,8 +161,10 @@ frontend incoming
   {% if haproxy_enable_maintenance | default(False) %}
   use_backend {{ haproxy_maintenance_backend }}{{ ' if ' + haproxy_maintenance_filter if haproxy_maintenance_filter | default(False) else '' }}
   {% endif %}
+{% if haproxy_incoming | default(False) %}
 
-  {{ haproxy_incoming  | indent(width=2, indentfirst=False) | trim }}
+  {{ haproxy_incoming | indent(width=2, indentfirst=False) | trim }}
+{% endif %}
 
   default_backend {{ haproxy_default_backend }}
 {% for frontend in haproxy_frontends %}
@@ -175,14 +177,14 @@ frontend {{ frontend.name }}
 
 backend fallback
   option tcp-smart-connect
-  retry-on conn-failure
+  retry-on conn-failure empty-response response-timeout
   default-server tfo check
 
   server localhost 127.0.0.1:81
 
 backend maintenance
   option tcp-smart-connect
-  retry-on conn-failure
+  retry-on conn-failure empty-response response-timeout
   default-server tfo check
 
   http-response set-status 503
@@ -202,11 +204,8 @@ backend {{ backend.name }}
 {% for item in backend.options | default([]) %}
   option {{ item }}
 {% endfor %}
-{% if backend.conn_failure | default(True) %}
-  retry-on conn-failure
-{% endif %}
-{% if backend.retryable_errors | default(False) %}
-  retry-on all-retryable-errors
+{% if backend.retry_on | default(haproxy_retry_on) %}
+  retry-on {{ haproxy_retry_on | join(' ') }}
 {% endif %}
 {% if backend.defaults | default(True) %}
   default-server {{ backend.defaults | default(['tfo', 'check']) | join(' ') }}

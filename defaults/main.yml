@@ -152,8 +152,10 @@ haproxy_frontends: []
 #       - tfo
 #       - check
 #     smart_connect: True
-#     retryable_errors: True
-#     conn_failure: False
+#     retry_on:
+#       - conn-failure
+#       - empty-response
+#       - response-timeout
 #     csp: True
 #     servers:
 #       - server1:8080
@@ -247,6 +249,12 @@ haproxy_global_maxconn: 32000
 
 # @var haprxy_http_reuse:description: Declare how idle HTTP connections may be shared between requests
 haprxy_http_reuse: always
+
+# @var haproxy_retry_on:description: List of default retry-on options for backends
+haproxy_retry_on:
+  - conn-failure
+  - empty-response
+  - response-timeout
 
 # @var haproxy_error_list:description: List of supported error pages
 haproxy_error_list:

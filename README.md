@@ -39,6 +39,7 @@ Building and improving this Ansible role have been sponsored by my employer **Pr
   * [haproxy_maintenance_filter](#haproxy_maintenance_filter)
   * [haproxy_peers](#haproxy_peers)
   * [haproxy_referer_policy](#haproxy_referer_policy)
+  * [haproxy_retry_on](#haproxy_retry_on)
   * [haproxy_skip_configuration](#haproxy_skip_configuration)
   * [haproxy_ssl_ciphers](#haproxy_ssl_ciphers)
   * [haproxy_ssl_ciphersuites](#haproxy_ssl_ciphersuites)
@@ -112,8 +113,10 @@ haproxy_backends:
       - tfo
       - check
     smart_connect: True
-    retryable_errors: True
-    conn_failure: False
+    retry_on:
+      - conn-failure
+      - empty-response
+      - response-timeout
     csp: True
     servers:
       - server1:8080
@@ -461,6 +464,19 @@ Referrer-Policy header if security headers are enabled
 
 ```YAML
 haproxy_referer_policy: no-referrer-when-downgrade
+```
+
+### haproxy_retry_on
+
+List of default retry-on options for backends
+
+#### Default value
+
+```YAML
+haproxy_retry_on:
+  - conn-failure
+  - empty-response
+  - response-timeout
 ```
 
 ### haproxy_skip_configuration
