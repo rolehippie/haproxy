@@ -51,10 +51,10 @@ defaults
   option dontlognull
 
   timeout connect 5s
-  timeout client 600s
-  timeout server 600s
-  timeout queue 600s
-  timeout tunnel 600s
+  timeout client 120s
+  timeout server 120s
+  timeout queue 120s
+  timeout tunnel 120s
 
 {% for item in haproxy_error_list %}
   errorfile {{ item }} /etc/haproxy/errors/{{ item }}.http
@@ -67,10 +67,10 @@ listen stats
   mode http
 
   maxconn 10
-  timeout connect 100s
-  timeout client 100s
-  timeout server 100s
-  timeout queue 100s
+  timeout connect 120s
+  timeout client 120s
+  timeout server 120s
+  timeout queue 120s
 
   stats enable
   stats refresh 30s
