@@ -163,7 +163,7 @@ frontend incoming
   {% endif %}
 {% if haproxy_incoming | default(False) %}
 
-  {{ haproxy_incoming | indent(width=2, indentfirst=False) | trim }}
+  {{ haproxy_incoming | indent(width=2, first=False) | trim }}
 {% endif %}
 
   default_backend {{ haproxy_default_backend }}
@@ -171,7 +171,7 @@ frontend incoming
 
 frontend {{ frontend.name }}
 {% if frontend.content | default(False) %}
-  {{ frontend.content | indent(width=2, indentfirst=False) | trim }}
+  {{ frontend.content | indent(width=2, first=False) | trim }}
 {% endif %}
 {% endfor %}
 
@@ -193,7 +193,7 @@ backend maintenance
 
 backend {{ backend.name }}
 {% if backend.content | default(False) %}
-  {{ backend.content | indent(width=2, indentfirst=False) | trim }}
+  {{ backend.content | indent(width=2, first=False) | trim }}
 {% else %}
 {% for item in backend.settings | default([]) %}
   {{ item }}
@@ -224,23 +224,23 @@ backend {{ backend.name }}
 {% for frontend in item.frontends %}
 
 frontend {{ frontend.name | default(item.name) }}
-  {{ frontend.content | default(frontend) | indent(width=2, indentfirst=False) | trim }}
+  {{ frontend.content | default(frontend) | indent(width=2, first=False) | trim }}
 {% endfor %}
 {% else %}
 
 frontend {{ item.name }}
-  {{ item.frontends | indent(width=2, indentfirst=False) | trim }}
+  {{ item.frontends | indent(width=2, first=False) | trim }}
 {% endif %}
 {% if not item.backends is string and item.backends is iterable %}
 {% for backend in item.backends %}
 
 backend {{ backend.name | default(item.name) }}
-  {{ backend.content | default(backend) | indent(width=2, indentfirst=False) | trim }}
+  {{ backend.content | default(backend) | indent(width=2, first=False) | trim }}
 {% endfor %}
 {% else %}
 
 backend {{ item.name }}
-  {{ item.backends | indent(width=2, indentfirst=False) | trim }}
+  {{ item.backends | indent(width=2, first=False) | trim }}
 {% endif %}
 {% endfor %}
 {% endif %}
