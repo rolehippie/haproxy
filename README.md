@@ -16,7 +16,9 @@ Building and improving this Ansible role have been sponsored by my employer **Pr
   * [haproxy_acls](#haproxy_acls)
   * [haproxy_backends](#haproxy_backends)
   * [haproxy_blocks](#haproxy_blocks)
+  * [haproxy_client_timeout](#haproxy_client_timeout)
   * [haproxy_config](#haproxy_config)
+  * [haproxy_connect_timeout](#haproxy_connect_timeout)
   * [haproxy_content_type_options](#haproxy_content_type_options)
   * [haproxy_default_backend](#haproxy_default_backend)
   * [haproxy_enable_maintenance](#haproxy_enable_maintenance)
@@ -38,14 +40,17 @@ Building and improving this Ansible role have been sponsored by my employer **Pr
   * [haproxy_maintenance_backend](#haproxy_maintenance_backend)
   * [haproxy_maintenance_filter](#haproxy_maintenance_filter)
   * [haproxy_peers](#haproxy_peers)
+  * [haproxy_queue_timeout](#haproxy_queue_timeout)
   * [haproxy_referer_policy](#haproxy_referer_policy)
   * [haproxy_retry_on](#haproxy_retry_on)
+  * [haproxy_server_timeout](#haproxy_server_timeout)
   * [haproxy_skip_configuration](#haproxy_skip_configuration)
   * [haproxy_ssl_ciphers](#haproxy_ssl_ciphers)
   * [haproxy_ssl_ciphersuites](#haproxy_ssl_ciphersuites)
   * [haproxy_ssl_options](#haproxy_ssl_options)
   * [haproxy_sslredirect_filter](#haproxy_sslredirect_filter)
   * [haproxy_tcp_logging](#haproxy_tcp_logging)
+  * [haproxy_tunnel_timeout](#haproxy_tunnel_timeout)
   * [haproxy_userlists](#haproxy_userlists)
   * [haproxy_version](#haproxy_version)
   * [haproxy_xss_protection](#haproxy_xss_protection)
@@ -171,6 +176,14 @@ haproxy_blocks:
           ...
 ```
 
+### haproxy_client_timeout
+
+#### Default value
+
+```YAML
+haproxy_client_timeout: 600s
+```
+
 ### haproxy_config
 
 Raw configuration for the HAProxy
@@ -201,6 +214,16 @@ haproxy_config: |
     bind 0.0.0.0:80
     bind 0.0.0.0:443 alpn h2,http/1.1,http/1.0 ssl crt /etc/haproxy/ssl/
     ...
+```
+
+### haproxy_connect_timeout
+
+Global default tunnel timeout
+
+#### Default value
+
+```YAML
+haproxy_connect_timeout: 10s
 ```
 
 ### haproxy_content_type_options
@@ -456,6 +479,14 @@ haproxy_peers:
     address: 192.168.1.3
 ```
 
+### haproxy_queue_timeout
+
+#### Default value
+
+```YAML
+haproxy_queue_timeout: 600s
+```
+
 ### haproxy_referer_policy
 
 Referrer-Policy header if security headers are enabled
@@ -477,6 +508,14 @@ haproxy_retry_on:
   - conn-failure
   - empty-response
   - response-timeout
+```
+
+### haproxy_server_timeout
+
+#### Default value
+
+```YAML
+haproxy_server_timeout: 600s
 ```
 
 ### haproxy_skip_configuration
@@ -552,6 +591,14 @@ Logging format for TCP frontends
 
 ```YAML
 haproxy_tcp_logging: '{"host":"%H","ident":"haproxy","pid":%pid,"timestamp":"%Tl","haproxy":{"conn":{"act":%ac,"fe":%fc,"be":%bc,"srv":%sc},"queue":{"backend":%bq,"srv":%sq},"time":{"tw":%Tw,"tc":%Tc,"tt":%Tt},"termination_state":"%tsc","retries":%rc,"network":{"client_ip":"%ci","client_port":%cp,"frontend_ip":"%fi","frontend_port":%fp},"name":{"backend":"%b","frontend":"%ft","server":"%s"},"bytes":{"uploaded":%U,"read":%B}}}'
+```
+
+### haproxy_tunnel_timeout
+
+#### Default value
+
+```YAML
+haproxy_tunnel_timeout: 600s
 ```
 
 ### haproxy_userlists

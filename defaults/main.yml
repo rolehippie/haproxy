@@ -247,6 +247,21 @@ haproxy_log_extra:
 # @var haproxy_global_maxconn:description: Globally defined max connections
 haproxy_global_maxconn: 32000
 
+# @var haproxy_connect_timeout:description: Global default connect timeout
+haproxy_connect_timeout: 10s
+
+# @var haproxy_connect_timeout:description: Global default client timeout
+haproxy_client_timeout: 600s
+
+# @var haproxy_connect_timeout:description: Global default server timeout
+haproxy_server_timeout: 600s
+
+# @var haproxy_connect_timeout:description: Global default queue timeout
+haproxy_queue_timeout: 600s
+
+# @var haproxy_connect_timeout:description: Global default tunnel timeout
+haproxy_tunnel_timeout: 600s
+
 # @var haprxy_http_reuse:description: Declare how idle HTTP connections may be shared between requests
 haprxy_http_reuse: always
 

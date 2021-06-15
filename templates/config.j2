@@ -50,11 +50,11 @@ defaults
   option redispatch
   option dontlognull
 
-  timeout connect 5s
-  timeout client 120s
-  timeout server 120s
-  timeout queue 120s
-  timeout tunnel 120s
+  timeout connect {{ haproxy_connect_timeout }}
+  timeout client {{ haproxy_client_timeout }}
+  timeout server {{ haproxy_server_timeout }}
+  timeout queue {{ haproxy_queue_timeout }}
+  timeout tunnel {{ haproxy_tunnel_timeout }}
 
 {% for item in haproxy_error_list %}
   errorfile {{ item }} /etc/haproxy/errors/{{ item }}.http
@@ -67,10 +67,11 @@ listen stats
   mode http
 
   maxconn 10
-  timeout connect 120s
+  timeout connect 10s
   timeout client 120s
   timeout server 120s
   timeout queue 120s
+  timeout tunnel 120s
 
   stats enable
   stats refresh 30s
@@ -198,9 +199,6 @@ backend {{ backend.name }}
 {% for item in backend.settings | default([]) %}
   {{ item }}
 {% endfor %}
-{% if backend.smart_connect | default(True) %}
-  option tcp-smart-connect
-{% endif %}
 {% for item in backend.options | default([]) %}
   option {{ item }}
 {% endfor %}
