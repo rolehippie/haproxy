@@ -202,8 +202,8 @@ backend {{ backend.name }}
 {% for item in backend.options | default([]) %}
   option {{ item }}
 {% endfor %}
-{% if backend.retry_on | default(haproxy_retry_on) %}
-  retry-on {{ haproxy_retry_on | join(' ') }}
+{% if backend.retry_on | default(False) or haproxy_retry_on | default(False) %}
+  retry-on {{ backend.retry_on | default(haproxy_retry_on) | join(' ') }}
 {% endif %}
 {% if backend.defaults | default(True) %}
   default-server {{ backend.defaults | default(['tfo', 'check']) | join(' ') }}
