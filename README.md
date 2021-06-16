@@ -223,7 +223,7 @@ Global default tunnel timeout
 #### Default value
 
 ```YAML
-haproxy_connect_timeout: 10s
+haproxy_connect_timeout: 600s
 ```
 
 ### haproxy_content_type_options

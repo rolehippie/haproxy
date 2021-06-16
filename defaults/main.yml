@@ -248,7 +248,7 @@ haproxy_log_extra:
 haproxy_global_maxconn: 32000
 
 # @var haproxy_connect_timeout:description: Global default connect timeout
-haproxy_connect_timeout: 10s
+haproxy_connect_timeout: 600s
 
 # @var haproxy_connect_timeout:description: Global default client timeout
 haproxy_client_timeout: 600s
