@@ -169,10 +169,12 @@ frontend incoming
 
   default_backend {{ haproxy_default_backend }}
 {% for frontend in haproxy_frontends %}
+{% if frontend.state | default('present') == 'present' %}
 
 frontend {{ frontend.name }}
 {% if frontend.content | default(False) %}
   {{ frontend.content | indent(width=2, first=False) | trim }}
+{% endif %}
 {% endif %}
 {% endfor %}
 
@@ -191,6 +193,7 @@ backend maintenance
   http-response set-status 503
   server localhost 127.0.0.1:81
 {% for backend in haproxy_backends %}
+{% if backend.state | default('present') == 'present' %}
 
 backend {{ backend.name }}
 {% if backend.content | default(False) %}
@@ -216,8 +219,10 @@ backend {{ backend.name }}
   server {{ backend.name }}-{{ '%02d' % loop.index }} {{ server }}
 {% endfor %}
 {% endif %}
+{% endif %}
 {% endfor %}
 {% for item in haproxy_blocks %}
+{% if item.state | default('present') == 'present' %}
 {% if not item.frontends is string and item.frontends is iterable %}
 {% for frontend in item.frontends %}
 
@@ -239,6 +244,7 @@ backend {{ backend.name | default(item.name) }}
 
 backend {{ item.name }}
   {{ item.backends | indent(width=2, first=False) | trim }}
+{% endif %}
 {% endif %}
 {% endfor %}
 {% endif %}
