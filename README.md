@@ -1,63 +1,64 @@
 # haproxy
 
-[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/haproxy) [![Testing Build](https://github.com/rolehippie/haproxy/workflows/testing/badge.svg)](https://github.com/rolehippie/haproxy/actions?query=workflow%3Atesting) [![Readme Build](https://github.com/rolehippie/haproxy/workflows/readme/badge.svg)](https://github.com/rolehippie/haproxy/actions?query=workflow%3Areadme) [![Galaxy Build](https://github.com/rolehippie/haproxy/workflows/galaxy/badge.svg)](https://github.com/rolehippie/haproxy/actions?query=workflow%3Agalaxy) [![License: Apache-2.0](https://img.shields.io/github/license/rolehippie/haproxy)](https://github.com/rolehippie/haproxy/blob/master/LICENSE) 
+[![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/haproxy) [![Testing Build](https://github.com/rolehippie/haproxy/workflows/testing/badge.svg)](https://github.com/rolehippie/haproxy/actions?query=workflow%3Atesting) [![Readme Build](https://github.com/rolehippie/haproxy/workflows/readme/badge.svg)](https://github.com/rolehippie/haproxy/actions?query=workflow%3Areadme) [![Galaxy Build](https://github.com/rolehippie/haproxy/workflows/galaxy/badge.svg)](https://github.com/rolehippie/haproxy/actions?query=workflow%3Agalaxy) [![License: Apache-2.0](https://img.shields.io/github/license/rolehippie/haproxy)](https://github.com/rolehippie/haproxy/blob/master/LICENSE)
 
-Ansible role to install and configure HAProxy. 
+Ansible role to install and configure HAProxy.
 
-## Sponsor 
+## Sponsor
 
-[![Proact Deutschland GmbH](https://proact.eu/wp-content/uploads/2020/03/proact-logo.png)](https://proact.eu) 
+[![Proact Deutschland GmbH](https://proact.eu/wp-content/uploads/2020/03/proact-logo.png)](https://proact.eu)
 
 Building and improving this Ansible role have been sponsored by my employer **Proact Deutschland GmbH**.
 
 ## Table of content
 
-* [Default Variables](#default-variables)
-  * [haproxy_acls](#haproxy_acls)
-  * [haproxy_backends](#haproxy_backends)
-  * [haproxy_blocks](#haproxy_blocks)
-  * [haproxy_client_timeout](#haproxy_client_timeout)
-  * [haproxy_config](#haproxy_config)
-  * [haproxy_connect_timeout](#haproxy_connect_timeout)
-  * [haproxy_content_type_options](#haproxy_content_type_options)
-  * [haproxy_default_backend](#haproxy_default_backend)
-  * [haproxy_enable_maintenance](#haproxy_enable_maintenance)
-  * [haproxy_enable_security_headers](#haproxy_enable_security_headers)
-  * [haproxy_error_list](#haproxy_error_list)
-  * [haproxy_error_pages](#haproxy_error_pages)
-  * [haproxy_expect_ct](#haproxy_expect_ct)
-  * [haproxy_exporter_binding](#haproxy_exporter_binding)
-  * [haproxy_frame_options](#haproxy_frame_options)
-  * [haproxy_frontends](#haproxy_frontends)
-  * [haproxy_global_maxconn](#haproxy_global_maxconn)
-  * [haproxy_http_logging](#haproxy_http_logging)
-  * [haproxy_incoming](#haproxy_incoming)
-  * [haproxy_incoming_binding](#haproxy_incoming_binding)
-  * [haproxy_letsencrypt_backend](#haproxy_letsencrypt_backend)
-  * [haproxy_log_address](#haproxy_log_address)
-  * [haproxy_log_extra](#haproxy_log_extra)
-  * [haproxy_log_facility](#haproxy_log_facility)
-  * [haproxy_maintenance_backend](#haproxy_maintenance_backend)
-  * [haproxy_maintenance_filter](#haproxy_maintenance_filter)
-  * [haproxy_peers](#haproxy_peers)
-  * [haproxy_queue_timeout](#haproxy_queue_timeout)
-  * [haproxy_referer_policy](#haproxy_referer_policy)
-  * [haproxy_retry_on](#haproxy_retry_on)
-  * [haproxy_server_timeout](#haproxy_server_timeout)
-  * [haproxy_skip_configuration](#haproxy_skip_configuration)
-  * [haproxy_ssl_ciphers](#haproxy_ssl_ciphers)
-  * [haproxy_ssl_ciphersuites](#haproxy_ssl_ciphersuites)
-  * [haproxy_ssl_options](#haproxy_ssl_options)
-  * [haproxy_sslredirect_filter](#haproxy_sslredirect_filter)
-  * [haproxy_tcp_logging](#haproxy_tcp_logging)
-  * [haproxy_tunnel_timeout](#haproxy_tunnel_timeout)
-  * [haproxy_userlists](#haproxy_userlists)
-  * [haproxy_version](#haproxy_version)
-  * [haproxy_xss_protection](#haproxy_xss_protection)
-  * [haprxy_http_reuse](#haprxy_http_reuse)
-* [Dependencies](#dependencies)
-* [License](#license)
-* [Author](#author)
+- [Default Variables](#default-variables)
+  - [haproxy_acls](#haproxy_acls)
+  - [haproxy_backends](#haproxy_backends)
+  - [haproxy_blocks](#haproxy_blocks)
+  - [haproxy_client_timeout](#haproxy_client_timeout)
+  - [haproxy_config](#haproxy_config)
+  - [haproxy_connect_timeout](#haproxy_connect_timeout)
+  - [haproxy_content_type_options](#haproxy_content_type_options)
+  - [haproxy_default_backend](#haproxy_default_backend)
+  - [haproxy_enable_maintenance](#haproxy_enable_maintenance)
+  - [haproxy_enable_security_headers](#haproxy_enable_security_headers)
+  - [haproxy_error_list](#haproxy_error_list)
+  - [haproxy_error_pages](#haproxy_error_pages)
+  - [haproxy_expect_ct](#haproxy_expect_ct)
+  - [haproxy_exporter_binding](#haproxy_exporter_binding)
+  - [haproxy_frame_options](#haproxy_frame_options)
+  - [haproxy_frontends](#haproxy_frontends)
+  - [haproxy_global_maxconn](#haproxy_global_maxconn)
+  - [haproxy_http_logging](#haproxy_http_logging)
+  - [haproxy_incoming](#haproxy_incoming)
+  - [haproxy_incoming_binding](#haproxy_incoming_binding)
+  - [haproxy_letsencrypt_backend](#haproxy_letsencrypt_backend)
+  - [haproxy_log_address](#haproxy_log_address)
+  - [haproxy_log_extra](#haproxy_log_extra)
+  - [haproxy_log_facility](#haproxy_log_facility)
+  - [haproxy_maintenance_backend](#haproxy_maintenance_backend)
+  - [haproxy_maintenance_filter](#haproxy_maintenance_filter)
+  - [haproxy_peers](#haproxy_peers)
+  - [haproxy_queue_timeout](#haproxy_queue_timeout)
+  - [haproxy_referer_policy](#haproxy_referer_policy)
+  - [haproxy_retry_on](#haproxy_retry_on)
+  - [haproxy_server_timeout](#haproxy_server_timeout)
+  - [haproxy_skip_configuration](#haproxy_skip_configuration)
+  - [haproxy_ssl_ciphers](#haproxy_ssl_ciphers)
+  - [haproxy_ssl_ciphersuites](#haproxy_ssl_ciphersuites)
+  - [haproxy_ssl_options](#haproxy_ssl_options)
+  - [haproxy_sslredirect_filter](#haproxy_sslredirect_filter)
+  - [haproxy_tcp_logging](#haproxy_tcp_logging)
+  - [haproxy_tunnel_timeout](#haproxy_tunnel_timeout)
+  - [haproxy_userlists](#haproxy_userlists)
+  - [haproxy_version](#haproxy_version)
+  - [haproxy_xss_protection](#haproxy_xss_protection)
+  - [haprxy_http_reuse](#haprxy_http_reuse)
+- [Discovered Tags](#discovered-tags)
+- [Dependencies](#dependencies)
+- [License](#license)
+- [Author](#author)
 
 ---
 
@@ -203,12 +204,10 @@ haproxy_config: |
     chroot /var/lib/haproxy
     ...
 
-
   defaults
     log global
     mode http
     ...
-
 
   frontend incoming
     bind 0.0.0.0:80
@@ -655,9 +654,14 @@ Declare how idle HTTP connections may be shared between requests
 haprxy_http_reuse: always
 ```
 
+## Discovered Tags
+
+**_haproxy_**
+
+
 ## Dependencies
 
-* None
+- None
 
 ## License
 
