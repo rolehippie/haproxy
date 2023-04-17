@@ -286,4 +286,7 @@ haproxy_error_list:
 # @var haproxy_error_pages:description: Path to error page files
 haproxy_error_pages: errors
 
+# @var haproxy_keyring:description: Path for the repository keyring
+haproxy_keyring: /usr/share/keyrings/haproxy-archive-keyring.gpg
+
 ...

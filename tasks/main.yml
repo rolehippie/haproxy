@@ -1,8 +1,31 @@
 # Standards: 1.2
 ---
+- name: Remove legacy key
+  apt_key:
+    id: CFFB779AADC995E4F350A060505D97A41C61B9CD
+    state: absent
+  tags:
+    - haproxy
+
+- name: Remove legacy repo
+  apt_repository:
+    repo: "deb http://ppa.launchpad.net/vbernat/haproxy-{{ haproxy_version }}/ubuntu {{ ansible_distribution_release }} main"
+    filename: haproxy
+    update_cache: False
+    state: absent
+  tags:
+    - haproxy
+
+- name: Download repo key
+  shell:
+    cmd: curl -sSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xCFFB779AADC995E4F350A060505D97A41C61B9CD" | gpg --dearmor --output {{ haproxy_keyring }}
+    creates: "{{ haproxy_keyring }}"
+  tags:
+    - haproxy
+
 - name: Add apt repository
   apt_repository:
-    repo: "ppa:vbernat/haproxy-{{ haproxy_version }}"
+    repo: "deb [signed-by={{ haproxy_keyring }}] https://ppa.launchpadcontent.net/vbernat/haproxy-{{ haproxy_version }}/ubuntu {{ ansible_distribution_release }} main"
     filename: haproxy
     update_cache: True
     state: present
