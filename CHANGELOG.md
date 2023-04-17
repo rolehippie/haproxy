@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/rolehippie/haproxy/compare/v1.0.0...v1.1.0) (2023-04-17)
+
+
+### Features
+
+* use unified path for repo key and drop legacy key ([8bea3e4](https://github.com/rolehippie/haproxy/commit/8bea3e436a40d549bd990dc16a97e54177e53f5f))
+
+
+### Bugfixes
+
+* set http-use-htx only up to 2.0 ([0d71c24](https://github.com/rolehippie/haproxy/commit/0d71c24265e74d4771c421edae2963f1198bc6db))
+
 ## 1.0.0 (2023-01-05)
 
 
