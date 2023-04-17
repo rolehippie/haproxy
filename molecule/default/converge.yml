@@ -2,6 +2,8 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    haproxy_version: 2.7
   roles:
     - role: rolehippie.haproxy
 
