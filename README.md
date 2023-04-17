@@ -37,6 +37,7 @@ Building and improving this Ansible role have been sponsored by my current and p
   - [haproxy_http_logging](#haproxy_http_logging)
   - [haproxy_incoming](#haproxy_incoming)
   - [haproxy_incoming_binding](#haproxy_incoming_binding)
+  - [haproxy_keyring](#haproxy_keyring)
   - [haproxy_letsencrypt_backend](#haproxy_letsencrypt_backend)
   - [haproxy_log_address](#haproxy_log_address)
   - [haproxy_log_extra](#haproxy_log_extra)
@@ -405,6 +406,16 @@ Address to bind the incoming frontend
 
 ```YAML
 haproxy_incoming_binding: 0.0.0.0
+```
+
+### haproxy_keyring
+
+Path for the repository keyring
+
+#### Default value
+
+```YAML
+haproxy_keyring: /usr/share/keyrings/haproxy-archive-keyring.gpg
 ```
 
 ### haproxy_letsencrypt_backend
