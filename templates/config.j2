@@ -95,7 +95,9 @@ peers cluster
 frontend exporter
    bind {{ haproxy_exporter_binding }}:8404
 
+{% if haproxy_version is version("2.0", "<=") %}
    option http-use-htx
+{% endif %}
    http-request use-service prometheus-exporter if { path /metrics }
 
 frontend incoming
