@@ -1,14 +1,13 @@
-# Standards: 1.2
 ---
 - name: Remove legacy key
-  apt_key:
+  ansible.builtin.apt_key:
     id: CFFB779AADC995E4F350A060505D97A41C61B9CD
     state: absent
   tags:
     - haproxy
 
 - name: Remove legacy repo
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb http://ppa.launchpad.net/vbernat/haproxy-{{ haproxy_version }}/ubuntu {{ ansible_distribution_release }} main"
     filename: haproxy
     update_cache: False
@@ -17,14 +16,14 @@
     - haproxy
 
 - name: Download repo key
-  shell:
+  ansible.builtin.shell:
     cmd: curl -sSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xCFFB779AADC995E4F350A060505D97A41C61B9CD" | gpg --dearmor --output {{ haproxy_keyring }}
     creates: "{{ haproxy_keyring }}"
   tags:
     - haproxy
 
 - name: Add apt repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb [signed-by={{ haproxy_keyring }}] https://ppa.launchpadcontent.net/vbernat/haproxy-{{ haproxy_version }}/ubuntu {{ ansible_distribution_release }} main"
     filename: haproxy
     update_cache: True
@@ -37,7 +36,7 @@
     - haproxy
     - python3-cryptography
     - python3-openssl
-  package:
+  ansible.builtin.package:
     name: "{{ item }}"
     state: present
   tags:
@@ -47,7 +46,7 @@
   loop:
     - /etc/haproxy/ssl
     - /etc/haproxy/acls
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: root
@@ -59,7 +58,7 @@
 - name: Write ocsp script
   notify:
     - Reload haproxy
-  template:
+  ansible.builtin.template:
     src: ocsp.j2
     dest: /usr/sbin/haproxy-ocsp
     owner: root
@@ -71,7 +70,7 @@
 - name: Copy error pages
   notify:
     - Reload haproxy
-  copy:
+  ansible.builtin.copy:
     src: "{{ haproxy_error_pages }}"
     dest: /etc/haproxy
     owner: root
@@ -81,7 +80,7 @@
     - haproxy
 
 - name: Create challenge dir
-  file:
+  ansible.builtin.file:
     path: /var/www/html/.well-known/acme-challenge
     state: directory
     owner: root
@@ -92,7 +91,7 @@
 
 - name: Private dummy key
   when: not ansible_check_mode
-  openssl_privatekey:
+  community.crypto.openssl_privatekey:
     path: /etc/haproxy/selfsigned.key
     size: 4096
   tags:
@@ -100,7 +99,7 @@
 
 - name: Sign dummy request
   when: not ansible_check_mode
-  openssl_csr:
+  community.crypto.openssl_csr:
     path: /etc/haproxy/selfsigned.csr
     privatekey_path: /etc/haproxy/selfsigned.key
     common_name: "{{ ansible_hostname }}"
@@ -115,7 +114,7 @@
 
 - name: Generate dummy cert
   when: not ansible_check_mode
-  openssl_certificate:
+  community.crypto.x509_certificate:
     csr_path: /etc/haproxy/selfsigned.csr
     privatekey_path: /etc/haproxy/selfsigned.key
     path: /etc/haproxy/selfsigned.crt
@@ -126,14 +125,14 @@
 - name: Chain dummy cert
   when: not ansible_check_mode
   changed_when: False
-  shell: "cat selfsigned.crt selfsigned.key > ssl/000-selfsigned.pem"
+  ansible.builtin.shell: "cat selfsigned.crt selfsigned.key > ssl/000-selfsigned.pem"
   args:
     chdir: /etc/haproxy
   tags:
     - haproxy
 
 - name: Drop legacy cert
-  file:
+  ansible.builtin.file:
     path: /etc/haproxy/ssl/selfsigned.pem
     state: absent
   tags:
@@ -142,7 +141,7 @@
 - name: Check dhparam file
   register: haproxy_dhparam_file
   check_mode: False
-  stat:
+  ansible.builtin.stat:
     path: /etc/haproxy/dhparam.pem
   tags:
     - haproxy
@@ -151,7 +150,7 @@
   notify:
     - Reload haproxy
   when: not haproxy_dhparam_file.stat.exists or (ansible_date_time.epoch | int - haproxy_dhparam_file.stat.mtime) > (30 * 60 * 60 * 24)
-  command:
+  ansible.builtin.command:
     cmd: openssl dhparam -out /etc/haproxy/dhparam.pem 2048
   tags:
     - haproxy
@@ -165,7 +164,7 @@
   when:
     - item.state | default('present') == 'present'
     - not haproxy_skip_configuration
-  template:
+  ansible.builtin.template:
     src: acls.j2
     dest: "/etc/haproxy/acls/{{ item.name }}.lst"
     owner: root
@@ -183,7 +182,7 @@
   when:
     - item.state | default('present') == 'absent'
     - not haproxy_skip_configuration
-  file:
+  ansible.builtin.file:
     path: "/etc/haproxy/acls/{{ item.name }}.lst"
     state: absent
   tags:
@@ -194,7 +193,7 @@
     - Reload haproxy
   when:
     - not haproxy_skip_configuration
-  template:
+  ansible.builtin.template:
     src: config.j2
     dest: /etc/haproxy/haproxy.cfg
     validate: haproxy -c -f %s
@@ -205,7 +204,7 @@
     - haproxy
 
 - name: Create service directory
-  file:
+  ansible.builtin.file:
     path: /etc/systemd/system/haproxy.service.d
     state: directory
     owner: root
@@ -217,7 +216,7 @@
 - name: Write service override
   notify:
     - Reload haproxy
-  template:
+  ansible.builtin.template:
     src: override.j2
     dest: /etc/systemd/system/haproxy.service.d/override.conf
     owner: root
@@ -227,7 +226,7 @@
     - haproxy
 
 - name: Start haproxy service
-  systemd:
+  ansible.builtin.systemd:
     name: haproxy
     state: started
     daemon_reload: True
