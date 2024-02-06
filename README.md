@@ -680,7 +680,7 @@ haprxy_http_reuse: always
 
 ## Dependencies
 
-- None
+- [community.crypto](https://github.com/ansible-collections/community.crypto
 
 ## License
 
