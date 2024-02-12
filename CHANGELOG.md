@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.0](https://github.com/rolehippie/haproxy/compare/v1.1.0...v2.0.0) (2024-02-12)
+
+
+### Features
+
+* drop support for ubuntu 18.04 ([81d5d2a](https://github.com/rolehippie/haproxy/commit/81d5d2a2c8faebc1681c7288f8a337194a3c4155))
+* used full qualified collection names ([742acb8](https://github.com/rolehippie/haproxy/commit/742acb8ce7fd57a2a908c91cd1f81c0dd05c602f))
+
+
+### Bugfixes
+
+* remove meta requirements and document used collections ([34e9249](https://github.com/rolehippie/haproxy/commit/34e9249f03de69681a193ab26fbadb70320f9425))
+
 ## [1.1.0](https://github.com/rolehippie/haproxy/compare/v1.0.0...v1.1.0) (2023-04-17)
 
 
