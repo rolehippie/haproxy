@@ -1,0 +1,9 @@
+---
+collections:
+  - name: community.general
+    version: ">=3.0.5,<4.0.0"
+
+roles:
+  - name: rolehippie.apache
+
+...

@@ -1,8 +1,8 @@
-{% if haproxy_config | default(False) %}
+{% if haproxy_config | default(false) %}
 {{ haproxy_config }}
 {% else %}
 global
-  log {{ haproxy_log_address }} {{ haproxy_log_facility }}{{ ' ' + haproxy_log_extra if haproxy_log_extra | default(False) else '' }}
+  log {{ haproxy_log_address }} {{ haproxy_log_facility }}{{ ' ' + haproxy_log_extra if haproxy_log_extra | default(false) else '' }}
   chroot /var/lib/haproxy
 
   stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
@@ -15,23 +15,23 @@ global
   ca-base /etc/ssl/certs
   crt-base /etc/ssl/private
 
-{% if haproxy_ssl_ciphers | default(False) %}
+{% if haproxy_ssl_ciphers | default(false) %}
   ssl-default-bind-ciphers {{ haproxy_ssl_ciphers | join(':') }}
 {% endif %}
-{% if haproxy_ssl_ciphersuites | default(False) %}
+{% if haproxy_ssl_ciphersuites | default(false) %}
   ssl-default-bind-ciphersuites {{ haproxy_ssl_ciphersuites | join(':') }}
 {% endif %}
-{% if haproxy_ssl_options | default(False) %}
+{% if haproxy_ssl_options | default(false) %}
   ssl-default-bind-options prefer-client-ciphers {{ haproxy_ssl_options | join(' ') }}
 {% endif %}
 
-{% if haproxy_ssl_ciphers | default(False) %}
+{% if haproxy_ssl_ciphers | default(false) %}
   ssl-default-server-ciphers {{ haproxy_ssl_ciphers | join(':') }}
 {% endif %}
-{% if haproxy_ssl_ciphersuites | default(False) %}
+{% if haproxy_ssl_ciphersuites | default(false) %}
   ssl-default-server-ciphersuites {{ haproxy_ssl_ciphersuites | join(':') }}
 {% endif %}
-{% if haproxy_ssl_options | default(False) %}
+{% if haproxy_ssl_options | default(false) %}
   ssl-default-server-options {{ haproxy_ssl_options | join(' ') }}
 {% endif %}
 
@@ -84,7 +84,7 @@ userlist {{ item.name }}
   user {{ user.username }} password {{ user.password }}
 {% endfor %}
 {% endfor %}
-{% if haproxy_peers | default(False) %}
+{% if haproxy_peers | default(false) %}
 
 peers cluster
 {% for item in haproxy_peers %}
@@ -114,19 +114,19 @@ frontend incoming
 
   http-response set-header Strict-Transport-Security "max-age=63072000"
 {% if haproxy_enable_security_headers %}
-{% if haproxy_content_type_options | default(False) %}
+{% if haproxy_content_type_options | default(false) %}
   http-response set-header X-Content-Type-Options "{{ haproxy_content_type_options }}"
 {% endif %}
-{% if haproxy_frame_options | default(False) %}
+{% if haproxy_frame_options | default(false) %}
   http-response set-header X-Frame-Options "{{ haproxy_frame_options }}"
 {% endif %}
-{% if haproxy_xss_protection | default(False) %}
+{% if haproxy_xss_protection | default(false) %}
   http-response set-header X-XSS-Protection "{{ haproxy_xss_protection }}"
 {% endif %}
-{% if haproxy_referer_policy | default(False) %}
+{% if haproxy_referer_policy | default(false) %}
   http-response set-header Referrer-Policy "{{ haproxy_referer_policy }}"
 {% endif %}
-{% if haproxy_expect_ct | default(False) %}
+{% if haproxy_expect_ct | default(false) %}
   http-response set-header Expect-CT "{{ haproxy_expect_ct }}"
 {% endif %}
 {% endif %}
@@ -145,13 +145,13 @@ frontend incoming
 
   acl letsencrypt path_beg -i /.well-known/acme-challenge
   acl http ssl_fc,not
-{% if haproxy_acls | default(False) %}
+{% if haproxy_acls | default(false) %}
 
 {% for item in haproxy_acls %}{% if item.state | default('present') == 'present' %}
   acl {{ item.name }}-network src -f /etc/haproxy/acls/{{ item.name }}.lst
 {% endif %}{% endfor %}
 {% endif %}
-{% if haproxy_userlists | default(False) %}
+{% if haproxy_userlists | default(false) %}
 
 {% for item in haproxy_userlists %}
   acl auth-{{ item.name }} http_auth({{ item.name }})
@@ -161,12 +161,12 @@ frontend incoming
   http-request redirect scheme https code 301 if {{ haproxy_sslredirect_filter }}
 
   use_backend {{ haproxy_letsencrypt_backend }} if letsencrypt
-  {% if haproxy_enable_maintenance | default(False) %}
-  use_backend {{ haproxy_maintenance_backend }}{{ ' if ' + haproxy_maintenance_filter if haproxy_maintenance_filter | default(False) else '' }}
+  {% if haproxy_enable_maintenance | default(false) %}
+  use_backend {{ haproxy_maintenance_backend }}{{ ' if ' + haproxy_maintenance_filter if haproxy_maintenance_filter | default(false) else '' }}
   {% endif %}
-{% if haproxy_incoming | default(False) %}
+{% if haproxy_incoming | default(false) %}
 
-  {{ haproxy_incoming | indent(width=2, first=False) | trim }}
+  {{ haproxy_incoming | indent(width=2, first=false) | trim }}
 {% endif %}
 
   default_backend {{ haproxy_default_backend }}
@@ -174,8 +174,8 @@ frontend incoming
 {% if frontend.state | default('present') == 'present' %}
 
 frontend {{ frontend.name }}
-{% if frontend.content | default(False) %}
-  {{ frontend.content | indent(width=2, first=False) | trim }}
+{% if frontend.content | default(false) %}
+  {{ frontend.content | indent(width=2, first=false) | trim }}
 {% endif %}
 {% endif %}
 {% endfor %}
@@ -198,8 +198,8 @@ backend maintenance
 {% if backend.state | default('present') == 'present' %}
 
 backend {{ backend.name }}
-{% if backend.content | default(False) %}
-  {{ backend.content | indent(width=2, first=False) | trim }}
+{% if backend.content | default(false) %}
+  {{ backend.content | indent(width=2, first=false) | trim }}
 {% else %}
 {% for item in backend.settings | default([]) %}
   {{ item }}
@@ -207,14 +207,14 @@ backend {{ backend.name }}
 {% for item in backend.options | default([]) %}
   option {{ item }}
 {% endfor %}
-{% if backend.retry_on | default(False) or haproxy_retry_on | default(False) %}
+{% if backend.retry_on | default(false) or haproxy_retry_on | default(false) %}
   retry-on {{ backend.retry_on | default(haproxy_retry_on) | join(' ') }}
 {% endif %}
-{% if backend.defaults | default(True) %}
+{% if backend.defaults | default(true) %}
   default-server {{ backend.defaults | default(['tfo', 'check']) | join(' ') }}
 {% endif %}
 
-{% if backend.csp | default(False) %}
+{% if backend.csp | default(false) %}
   http-response set-header Content-Security-Policy "{{ backend.csp }}"
 {% endif %}
 {% for server in backend.servers %}
@@ -229,23 +229,23 @@ backend {{ backend.name }}
 {% for frontend in item.frontends %}
 
 frontend {{ frontend.name | default(item.name) }}
-  {{ frontend.content | default(frontend) | indent(width=2, first=False) | trim }}
+  {{ frontend.content | default(frontend) | indent(width=2, first=false) | trim }}
 {% endfor %}
 {% else %}
 
 frontend {{ item.name }}
-  {{ item.frontends | indent(width=2, first=False) | trim }}
+  {{ item.frontends | indent(width=2, first=false) | trim }}
 {% endif %}
 {% if not item.backends is string and item.backends is iterable %}
 {% for backend in item.backends %}
 
 backend {{ backend.name | default(item.name) }}
-  {{ backend.content | default(backend) | indent(width=2, first=False) | trim }}
+  {{ backend.content | default(backend) | indent(width=2, first=false) | trim }}
 {% endfor %}
 {% else %}
 
 backend {{ item.name }}
-  {{ item.backends | indent(width=2, first=False) | trim }}
+  {{ item.backends | indent(width=2, first=false) | trim }}
 {% endif %}
 {% endif %}
 {% endfor %}

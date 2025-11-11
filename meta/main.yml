@@ -28,10 +28,14 @@ galaxy_info:
       versions:
         - focal
         - jammy
+        - noble
   galaxy_tags:
     - loadbalancer
     - reverseproxy
 
 dependencies: []
+
+collections:
+  - community.crypto
 
 ...

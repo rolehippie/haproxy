@@ -1,4 +1,4 @@
-# workspace
+# haproxy
 
 [![Source Code](https://img.shields.io/badge/github-source%20code-blue?logo=github&logoColor=white)](https://github.com/rolehippie/haproxy)
 [![General Workflow](https://github.com/rolehippie/haproxy/actions/workflows/general.yml/badge.svg)](https://github.com/rolehippie/haproxy/actions/workflows/general.yml)
@@ -48,6 +48,12 @@ Building and improving this Ansible role have been sponsored by my current and p
   - [haproxy_queue_timeout](#haproxy_queue_timeout)
   - [haproxy_referer_policy](#haproxy_referer_policy)
   - [haproxy_retry_on](#haproxy_retry_on)
+  - [haproxy_selfsigned_country](#haproxy_selfsigned_country)
+  - [haproxy_selfsigned_email](#haproxy_selfsigned_email)
+  - [haproxy_selfsigned_locality](#haproxy_selfsigned_locality)
+  - [haproxy_selfsigned_org](#haproxy_selfsigned_org)
+  - [haproxy_selfsigned_state](#haproxy_selfsigned_state)
+  - [haproxy_selfsigned_unit](#haproxy_selfsigned_unit)
   - [haproxy_server_timeout](#haproxy_server_timeout)
   - [haproxy_skip_configuration](#haproxy_skip_configuration)
   - [haproxy_ssl_ciphers](#haproxy_ssl_ciphers)
@@ -127,12 +133,12 @@ haproxy_backends:
     defaults:
       - tfo
       - check
-    smart_connect: True
+    smart_connect: true
     retry_on:
       - conn-failure
       - empty-response
       - response-timeout
-    csp: True
+    csp: true
     servers:
       - server1:8080
       - server2:8080
@@ -528,6 +534,66 @@ haproxy_retry_on:
   - response-timeout
 ```
 
+### haproxy_selfsigned_country
+
+Country for selfsigned default cert
+
+#### Default value
+
+```YAML
+haproxy_selfsigned_country: DE
+```
+
+### haproxy_selfsigned_email
+
+Email for selfsigned default cert
+
+#### Default value
+
+```YAML
+haproxy_selfsigned_email: root@localhost
+```
+
+### haproxy_selfsigned_locality
+
+City for selfsigned default cert
+
+#### Default value
+
+```YAML
+haproxy_selfsigned_locality: Nuremberg
+```
+
+### haproxy_selfsigned_org
+
+Organisation for selfsigned default cert
+
+#### Default value
+
+```YAML
+haproxy_selfsigned_org: HAProxy
+```
+
+### haproxy_selfsigned_state
+
+State for selfsigned default cert
+
+#### Default value
+
+```YAML
+haproxy_selfsigned_state: Bavaria
+```
+
+### haproxy_selfsigned_unit
+
+Unit for selfsigned default cert
+
+#### Default value
+
+```YAML
+haproxy_selfsigned_unit: DevOps
+```
+
 ### haproxy_server_timeout
 
 #### Default value
@@ -650,7 +716,7 @@ Version of the PPA repo to use
 #### Default value
 
 ```YAML
-haproxy_version: 2.0
+haproxy_version: 3.2
 ```
 
 ### haproxy_xss_protection

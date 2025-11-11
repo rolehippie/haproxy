@@ -10,15 +10,35 @@
   ansible.builtin.apt_repository:
     repo: "deb http://ppa.launchpad.net/vbernat/haproxy-{{ haproxy_version }}/ubuntu {{ ansible_distribution_release }} main"
     filename: haproxy
-    update_cache: False
+    update_cache: false
     state: absent
   tags:
     - haproxy
 
 - name: Download repo key
-  ansible.builtin.shell:
-    cmd: curl -sSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xCFFB779AADC995E4F350A060505D97A41C61B9CD" | gpg --dearmor --output {{ haproxy_keyring }}
-    creates: "{{ haproxy_keyring }}"
+  register: haproxy_key_download
+  ansible.builtin.get_url:
+    url: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xCFFB779AADC995E4F350A060505D97A41C61B9CD
+    dest: "{{ haproxy_keyring }}.asc"
+    mode: u=rw,g=r,o=r
+    force: true
+  tags:
+    - haproxy
+
+- name: Check repo key
+  register: haproxy_key_status
+  ansible.builtin.stat:
+    path: "{{ haproxy_keyring }}"
+  tags:
+    - haproxy
+
+- name: Dearmor repo key
+  when:
+    - haproxy_key_download.changed or not haproxy_key_status.stat.exists
+  register: haproxy_key_convert
+  changed_when: haproxy_key_convert.rc == 0
+  ansible.builtin.command:
+    cmd: "gpg --dearmor -o {{ haproxy_keyring }} {{ haproxy_keyring }}.asc"
   tags:
     - haproxy
 
@@ -26,7 +46,7 @@
   ansible.builtin.apt_repository:
     repo: "deb [signed-by={{ haproxy_keyring }}] https://ppa.launchpadcontent.net/vbernat/haproxy-{{ haproxy_version }}/ubuntu {{ ansible_distribution_release }} main"
     filename: haproxy
-    update_cache: True
+    update_cache: true
     state: present
   tags:
     - haproxy
@@ -90,7 +110,8 @@
     - haproxy
 
 - name: Private dummy key
-  when: not ansible_check_mode
+  when:
+    - not ansible_check_mode
   community.crypto.openssl_privatekey:
     path: /etc/haproxy/selfsigned.key
     size: 4096
@@ -98,22 +119,24 @@
     - haproxy
 
 - name: Sign dummy request
-  when: not ansible_check_mode
+  when:
+    - not ansible_check_mode
   community.crypto.openssl_csr:
     path: /etc/haproxy/selfsigned.csr
     privatekey_path: /etc/haproxy/selfsigned.key
     common_name: "{{ ansible_hostname }}"
-    country_name: DE
-    state_or_province_name: Bavaria
-    locality_name: Nuremberg
-    organization_name: Proact
-    organizational_unit_name: DevOps
-    email_address: devops@proactcloud.de
+    country_name: "{{ haproxy_selfsigned_country }}"
+    state_or_province_name: "{{ haproxy_selfsigned_state }}"
+    locality_name: "{{ haproxy_selfsigned_locality }}"
+    organization_name: "{{ haproxy_selfsigned_org }}"
+    organizational_unit_name: "{{ haproxy_selfsigned_unit }}"
+    email_address: "{{ haproxy_selfsigned_email }}"
   tags:
     - haproxy
 
 - name: Generate dummy cert
-  when: not ansible_check_mode
+  when:
+    - not ansible_check_mode
   community.crypto.x509_certificate:
     csr_path: /etc/haproxy/selfsigned.csr
     privatekey_path: /etc/haproxy/selfsigned.key
@@ -123,8 +146,9 @@
     - haproxy
 
 - name: Chain dummy cert
-  when: not ansible_check_mode
-  changed_when: False
+  when:
+    - not ansible_check_mode
+  changed_when: false
   ansible.builtin.shell: "cat selfsigned.crt selfsigned.key > ssl/000-selfsigned.pem"
   args:
     chdir: /etc/haproxy
@@ -140,7 +164,7 @@
 
 - name: Check dhparam file
   register: haproxy_dhparam_file
-  check_mode: False
+  check_mode: false
   ansible.builtin.stat:
     path: /etc/haproxy/dhparam.pem
   tags:
@@ -149,7 +173,9 @@
 - name: Generate dhparam file
   notify:
     - Reload haproxy
-  when: not haproxy_dhparam_file.stat.exists or (ansible_date_time.epoch | int - haproxy_dhparam_file.stat.mtime) > (30 * 60 * 60 * 24)
+  when:
+    - not haproxy_dhparam_file.stat.exists or (ansible_date_time.epoch | int - haproxy_dhparam_file.stat.mtime) > (30 * 60 * 60 * 24)
+  changed_when: false
   ansible.builtin.command:
     cmd: openssl dhparam -out /etc/haproxy/dhparam.pem 2048
   tags:
@@ -162,7 +188,7 @@
   loop_control:
     label: "{{ item.name }}"
   when:
-    - item.state | default('present') == 'present'
+    - true if item.state is not defined else item.state == 'present'
     - not haproxy_skip_configuration
   ansible.builtin.template:
     src: acls.j2
@@ -180,7 +206,7 @@
   loop_control:
     label: "{{ item.name }}"
   when:
-    - item.state | default('present') == 'absent'
+    - false if item.state is not defined else item.state == 'absent'
     - not haproxy_skip_configuration
   ansible.builtin.file:
     path: "/etc/haproxy/acls/{{ item.name }}.lst"
@@ -229,9 +255,9 @@
   ansible.builtin.systemd:
     name: haproxy
     state: started
-    daemon_reload: True
-    masked: False
-    enabled: True
+    daemon_reload: true
+    masked: false
+    enabled: true
   tags:
     - haproxy
 

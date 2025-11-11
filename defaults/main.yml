@@ -1,15 +1,15 @@
 ---
 # @var haproxy_version:description: Version of the PPA repo to use
-haproxy_version: 2.0
+haproxy_version: 3.2
 
 # @var haproxy_skip_configuration:description: Skip the configuration and don't touch it
-haproxy_skip_configuration: False
+haproxy_skip_configuration: false
 
 # @var haproxy_enable_maintenance:description: Enable or disable the maintenance backend
-haproxy_enable_maintenance: False
+haproxy_enable_maintenance: false
 
 # @var haproxy_enable_security_headers:description: Enable general security headers
-haproxy_enable_security_headers: True
+haproxy_enable_security_headers: true
 
 # @var haproxy_content_type_options:description: X-Content-Type-Options header if security headers are enabled
 haproxy_content_type_options: nosniff
@@ -52,6 +52,24 @@ haproxy_tcp_logging: '{"host":"%H","ident":"haproxy","pid":%pid,"timestamp":"%Tl
 
 # @var haproxy_http_logging:description: Logging format for HTTP frontends
 haproxy_http_logging: '{"host":"%H","ident":"haproxy","pid":%pid,"timestamp":"%Tl","haproxy":{"conn":{"act":%ac,"fe":%fc,"be":%bc,"srv":%sc},"queue":{"backend":%bq,"srv":%sq},"time":{"tq":%Tq,"tw":%Tw,"tc":%Tc,"tr":%Tr,"tt":%Tt},"termination_state":"%tsc","retries":%rc,"network":{"client_ip":"%ci","client_port":%cp,"frontend_ip":"%fi","frontend_port":%fp},"ssl":{"version":"%sslv","ciphers":"%sslc"},"request":{"method":"%HM","uri":"%HP","protocol":"%HV","header":{"host":"%[capture.req.hdr(0),json(utf8s)]","referer":"%[capture.req.hdr(1),json(utf8s)]"}},"name":{"backend":"%b","frontend":"%ft","server":"%s"},"response":{"status_code":%ST,"location":"%[capture.res.hdr(0),json(utf8s)]"},"bytes":{"uploaded":%U,"read":%B}}}'
+
+# @var haproxy_selfsigned_country:description: Country for selfsigned default cert
+haproxy_selfsigned_country: DE
+
+# @var haproxy_selfsigned_state:description: State for selfsigned default cert
+haproxy_selfsigned_state: Bavaria
+
+# @var haproxy_selfsigned_locality:description: City for selfsigned default cert
+haproxy_selfsigned_locality: Nuremberg
+
+# @var haproxy_selfsigned_org:description: Organisation for selfsigned default cert
+haproxy_selfsigned_org: HAProxy
+
+# @var haproxy_selfsigned_unit:description: Unit for selfsigned default cert
+haproxy_selfsigned_unit: DevOps
+
+# @var haproxy_selfsigned_email:description: Email for selfsigned default cert
+haproxy_selfsigned_email: root@localhost
 
 # @var haproxy_ssl_ciphers:description: List of ciphers used for SSL connections
 haproxy_ssl_ciphers:
@@ -150,12 +168,12 @@ haproxy_frontends: []
 #     defaults:
 #       - tfo
 #       - check
-#     smart_connect: True
+#     smart_connect: true
 #     retry_on:
 #       - conn-failure
 #       - empty-response
 #       - response-timeout
-#     csp: True
+#     csp: true
 #     servers:
 #       - server1:8080
 #       - server2:8080
