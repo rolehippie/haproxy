@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/rolehippie/haproxy/compare/v2.0.0...v2.1.0) (2025-11-24)
+
+
+### Features
+
+* apply new repo structure and update linting ([5a62672](https://github.com/rolehippie/haproxy/commit/5a626729e6eb62ac1375d9ee47ad5a8ee113601d))
+
+
+### Bugfixes
+
+* add correct collection to requirements ([d0e44f2](https://github.com/rolehippie/haproxy/commit/d0e44f25f6215de738e8c3484343819c69625472))
+
 ## [2.0.0](https://github.com/rolehippie/haproxy/compare/v1.1.0...v2.0.0) (2024-02-12)
 
 
