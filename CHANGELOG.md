@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/rolehippie/haproxy/compare/v3.0.0...v3.1.0) (2026-01-05)
+
+
+### Features
+
+* **minor:** update dependency community.general to >=12.2.0,<12.3.0 ([7b8c46b](https://github.com/rolehippie/haproxy/commit/7b8c46b4d40ef2fd9d3ca75edc8bc487dcf4580d))
+
 ## [3.0.0](https://github.com/rolehippie/haproxy/compare/v2.1.0...v3.0.0) (2025-12-22)
 
 
