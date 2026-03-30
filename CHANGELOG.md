@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.4.0](https://github.com/rolehippie/haproxy/compare/v3.3.0...v3.4.0) (2026-03-30)
+
+### Dependencies
+
+* **minor:** update dependency community.general to >=12.5.0,<12.6.0 ([8d8ec8d](https://github.com/rolehippie/haproxy/commit/8d8ec8d29a6fd595007d2031a964cb53b03ef1ef))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([2e3e880](https://github.com/rolehippie/haproxy/commit/2e3e8800ec2b02828b712bc461903bf488811cf7))
+* **flake:** updated lockfile [skip ci] ([d44b1c5](https://github.com/rolehippie/haproxy/commit/d44b1c5171fa481cfda30b3f98329020ac848376))
+* **flake:** updated lockfile [skip ci] ([9a9286c](https://github.com/rolehippie/haproxy/commit/9a9286c57dbb344e993a997cbf4e14b456223a64))
+
 ## [3.3.0](https://github.com/rolehippie/haproxy/compare/v3.2.0...v3.3.0) (2026-03-09)
 
 ### Dependencies
