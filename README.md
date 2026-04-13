@@ -430,7 +430,7 @@ Default letsencrypt backend
 #### Default value
 
 ```YAML
-haproxy_letsencrypt_backend: '{{ haproxy_default_backend }}'
+haproxy_letsencrypt_backend: fallback
 ```
 
 ### haproxy_log_address
