@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.0.0](https://github.com/rolehippie/haproxy/compare/v3.5.0...v4.0.0) (2026-05-25)
+
+### Dependencies
+
+* **major:** update dependency community.general to v13 ([1471e79](https://github.com/rolehippie/haproxy/commit/1471e791ecbea15c506650aab7ce02072bcc4399))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([148f23b](https://github.com/rolehippie/haproxy/commit/148f23b46bca2082cc009a9746a348c2ccfb1931))
+
 ## [3.5.0](https://github.com/rolehippie/haproxy/compare/v3.4.0...v3.5.0) (2026-05-11)
 
 ### Dependencies
