@@ -2,6 +2,6 @@
 ExecStartPre=/usr/sbin/haproxy-ocsp
 
 ExecReload=
-ExecReload=/usr/sbin/haproxy -f $CONFIG -c -q $EXTRAOPTS
+ExecReload=/usr/sbin/haproxy -c -f /etc/haproxy/haproxy.cfg
 ExecReload=/usr/sbin/haproxy-ocsp
 ExecReload=/bin/kill -USR2 $MAINPID

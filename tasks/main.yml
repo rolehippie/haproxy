@@ -8,7 +8,7 @@
 
 - name: Remove legacy repo
   ansible.builtin.apt_repository:
-    repo: "deb http://ppa.launchpad.net/vbernat/haproxy-{{ haproxy_version }}/ubuntu {{ ansible_distribution_release }} main"
+    repo: "deb http://ppa.launchpad.net/vbernat/haproxy-{{ haproxy_version }}/ubuntu {{ ansible_facts['distribution_release'] }} main"
     filename: haproxy
     update_cache: false
     state: absent
@@ -44,7 +44,7 @@
 
 - name: Add apt repository
   ansible.builtin.apt_repository:
-    repo: "deb [signed-by={{ haproxy_keyring }}] https://ppa.launchpadcontent.net/vbernat/haproxy-{{ haproxy_version }}/ubuntu {{ ansible_distribution_release }} main"
+    repo: "deb [signed-by={{ haproxy_keyring }}] https://ppa.launchpadcontent.net/vbernat/haproxy-{{ haproxy_version }}/ubuntu {{ ansible_facts['distribution_release'] }} main"
     filename: haproxy
     update_cache: true
     state: present
@@ -124,7 +124,7 @@
   community.crypto.openssl_csr:
     path: /etc/haproxy/selfsigned.csr
     privatekey_path: /etc/haproxy/selfsigned.key
-    common_name: "{{ ansible_hostname }}"
+    common_name: "{{ ansible_facts['hostname'] }}"
     country_name: "{{ haproxy_selfsigned_country }}"
     state_or_province_name: "{{ haproxy_selfsigned_state }}"
     locality_name: "{{ haproxy_selfsigned_locality }}"
@@ -174,7 +174,7 @@
   notify:
     - Reload haproxy
   when:
-    - not haproxy_dhparam_file.stat.exists or (ansible_date_time.epoch | int - haproxy_dhparam_file.stat.mtime) > (30 * 60 * 60 * 24)
+    - not haproxy_dhparam_file.stat.exists or (ansible_facts['date_time']['epoch'] | int - haproxy_dhparam_file.stat.mtime) > (30 * 60 * 60 * 24)
   changed_when: false
   ansible.builtin.command:
     cmd: openssl dhparam -out /etc/haproxy/dhparam.pem 2048
