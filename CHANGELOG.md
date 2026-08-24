@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.3.0](https://github.com/rolehippie/haproxy/compare/v4.2.0...v4.3.0) (2026-08-24)
+
+### Features
+
+* use correct ansible facts and properly handle reloads ([c3c61ab](https://github.com/rolehippie/haproxy/commit/c3c61ab73dd0fddc3d4420ad01bf393af3b198c0))
+
+### Dependencies
+
+* **minor:** update dependency community.general to >=13.3.0,<13.4.0 ([#63](https://github.com/rolehippie/haproxy/issues/63)) ([6631cef](https://github.com/rolehippie/haproxy/commit/6631cef8995d1f0582df8f6545c4b115262a4de9))
+* **minor:** update dependency pipx:ansible-doctor to v8.4.0 ([#60](https://github.com/rolehippie/haproxy/issues/60)) ([2342855](https://github.com/rolehippie/haproxy/commit/2342855056a1be48123c36d8506094b7ffacddf9))
+* **minor:** update dependency pipx:ansible-lint to v26.8.0 ([75a65de](https://github.com/rolehippie/haproxy/commit/75a65de86a16a1ba522f1cb9026f6afcc732498d))
+* **patch:** update dependency pipx:ansible-core to v2.21.3 ([#61](https://github.com/rolehippie/haproxy/issues/61)) ([fb69e82](https://github.com/rolehippie/haproxy/commit/fb69e826e9d97e7361846d7f08ef3f304619e233))
+* **patch:** update dependency pre-commit to v4.6.2 ([2693d70](https://github.com/rolehippie/haproxy/commit/2693d7049b3ef4340e605b564d21923807606d34))
+* **patch:** update dependency python to v3.14.7 ([#58](https://github.com/rolehippie/haproxy/issues/58)) ([98a1ca2](https://github.com/rolehippie/haproxy/commit/98a1ca2881bf07f87c9f82fe375d852a01688391))
+
 ## [4.2.0](https://github.com/rolehippie/haproxy/compare/v4.1.0...v4.2.0) (2026-07-27)
 
 ## [4.1.0](https://github.com/rolehippie/haproxy/compare/v4.0.0...v4.1.0) (2026-06-22)
