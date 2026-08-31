@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.3.1](https://github.com/rolehippie/haproxy/compare/v4.3.0...v4.3.1) (2026-08-31)
+
+### Bugfixes
+
+* always batch and auto approve gpg dearmor ([10a802b](https://github.com/rolehippie/haproxy/commit/10a802b570d7f7cb4827136a994bb9f1942e1704))
+
+### Dependencies
+
+* **patch:** update dependency pipx:ansible-doctor to v8.4.1 ([#66](https://github.com/rolehippie/haproxy/issues/66)) ([de9dac9](https://github.com/rolehippie/haproxy/commit/de9dac9547ba2710b241a52c2cd5f0df7b0b139b))
+
 ## [4.3.0](https://github.com/rolehippie/haproxy/compare/v4.2.0...v4.3.0) (2026-08-24)
 
 ### Features
