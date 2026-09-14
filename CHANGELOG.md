@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.4.0](https://github.com/rolehippie/haproxy/compare/v4.3.1...v4.4.0) (2026-09-14)
+
+### Dependencies
+
+* **minor:** update dependency community.general to >=13.4.0,<13.5.0 ([#67](https://github.com/rolehippie/haproxy/issues/67)) ([21b0b8c](https://github.com/rolehippie/haproxy/commit/21b0b8cb96c50618ff198533b16fad752a85cbb3))
+* **mise:** update dependency pipx:ansible-core to v2.21.4 ([#68](https://github.com/rolehippie/haproxy/issues/68)) ([bad5b4e](https://github.com/rolehippie/haproxy/commit/bad5b4eeb5598a5f9b35e94a4247a386eabed412))
+* **mise:** update dependency prek to v0.5.3 ([#69](https://github.com/rolehippie/haproxy/issues/69)) ([4beda14](https://github.com/rolehippie/haproxy/commit/4beda14f4485e6e64d8b47caa76cae1dc4ca87fe))
+
 ## [4.3.1](https://github.com/rolehippie/haproxy/compare/v4.3.0...v4.3.1) (2026-08-31)
 
 ### Bugfixes
