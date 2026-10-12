@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.5.0](https://github.com/rolehippie/haproxy/compare/v4.4.0...v4.5.0) (2026-10-12)
+
+### Dependencies
+
+* **minor:** update dependency community.general to >=13.5.0,<13.6.0 ([#77](https://github.com/rolehippie/haproxy/issues/77)) ([520f273](https://github.com/rolehippie/haproxy/commit/520f2733649f11d36a38ebe556198813a422da1f))
+* **mise:** update dependency pipx:ansible-core to v2.21.5 ([#75](https://github.com/rolehippie/haproxy/issues/75)) ([f8c3fed](https://github.com/rolehippie/haproxy/commit/f8c3fed323a417b76cd544c642780a3bf7161d6e))
+* **mise:** update dependency pipx:ansible-doctor to v8.4.2 ([#70](https://github.com/rolehippie/haproxy/issues/70)) ([360c346](https://github.com/rolehippie/haproxy/commit/360c3469c78d9dd8559d6ec94ba60900e3f26a47))
+* **mise:** update dependency pipx:ansible-doctor to v8.4.3 ([#76](https://github.com/rolehippie/haproxy/issues/76)) ([55296db](https://github.com/rolehippie/haproxy/commit/55296dbab4b496c9f3659548b07bcbb4ea380586))
+* **mise:** update dependency pipx:ansible-lint to v26.10.0 ([#78](https://github.com/rolehippie/haproxy/issues/78)) ([996a0d5](https://github.com/rolehippie/haproxy/commit/996a0d530909e212527d54ee5e122b8c1dd2ff0c))
+* **mise:** update dependency pipx:ansible-lint to v26.9.0 ([#71](https://github.com/rolehippie/haproxy/issues/71)) ([7a1acbf](https://github.com/rolehippie/haproxy/commit/7a1acbfef9460e4fa678233d38a45789e49fe1ed))
+* **mise:** update dependency prek to v0.5.4 ([#72](https://github.com/rolehippie/haproxy/issues/72)) ([63d03ca](https://github.com/rolehippie/haproxy/commit/63d03ca367b1ed39569d2549bc3dd14e6161b947))
+* **mise:** update dependency prek to v0.5.5 ([#74](https://github.com/rolehippie/haproxy/issues/74)) ([b3d42bf](https://github.com/rolehippie/haproxy/commit/b3d42bface913d342bc9689cbf47e13e53d03956))
+
 ## [4.4.0](https://github.com/rolehippie/haproxy/compare/v4.3.1...v4.4.0) (2026-09-14)
 
 ### Dependencies
