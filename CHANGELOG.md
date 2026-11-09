@@ -1,5 +1,20 @@
 # Changelog
 
+## [5.0.0](https://github.com/rolehippie/haproxy/compare/v4.5.0...v5.0.0) (2026-11-09)
+
+### Dependencies
+
+* **major:** update dependency community.general to v14 ([#85](https://github.com/rolehippie/haproxy/issues/85)) ([367ba3f](https://github.com/rolehippie/haproxy/commit/367ba3ff4ec081dca15ebf380d616268e16a5259))
+* **mise:** update dependency pipx:ansible-core to v2.22.0 ([#84](https://github.com/rolehippie/haproxy/issues/84)) ([bf1b6fd](https://github.com/rolehippie/haproxy/commit/bf1b6fd02a1921a98505302d2ac293bb19620791))
+* **mise:** update dependency pipx:ansible-doctor to v8.4.4 ([#88](https://github.com/rolehippie/haproxy/issues/88)) ([3ce5d11](https://github.com/rolehippie/haproxy/commit/3ce5d116031de57bfedd119d8429bb6e27bf04a0))
+* **mise:** update dependency pipx:ansible-lint to v26.10.1 ([#79](https://github.com/rolehippie/haproxy/issues/79)) ([106e81f](https://github.com/rolehippie/haproxy/commit/106e81fa2ea6d5f43cae5b3b7a6eddf2186daed0))
+* **mise:** update dependency pipx:ansible-lint to v26.11.0 ([#87](https://github.com/rolehippie/haproxy/issues/87)) ([e22909c](https://github.com/rolehippie/haproxy/commit/e22909c6aa0c1f838210f101acc884f678f3e8b6))
+* **mise:** update dependency prek to v0.5.10 ([#86](https://github.com/rolehippie/haproxy/issues/86)) ([8d09653](https://github.com/rolehippie/haproxy/commit/8d0965377143d8e046be66ed3c2238e761886c77))
+* **mise:** update dependency prek to v0.5.6 ([#80](https://github.com/rolehippie/haproxy/issues/80)) ([a43ce20](https://github.com/rolehippie/haproxy/commit/a43ce20c30991b4d3ff3c10799faccfeae6ad839))
+* **mise:** update dependency prek to v0.5.7 ([#81](https://github.com/rolehippie/haproxy/issues/81)) ([e7e0d8a](https://github.com/rolehippie/haproxy/commit/e7e0d8a2feaf0dca7d8be4f76d5b580f08854172))
+* **mise:** update dependency prek to v0.5.9 ([#83](https://github.com/rolehippie/haproxy/issues/83)) ([c9b904b](https://github.com/rolehippie/haproxy/commit/c9b904b6c9918c6fdba92f4410f29c95715d9b1c))
+* **mise:** update node.js to v26 ([#82](https://github.com/rolehippie/haproxy/issues/82)) ([de7850b](https://github.com/rolehippie/haproxy/commit/de7850bdea49d46bff6d59a2382c3541be96c2e7))
+
 ## [4.5.0](https://github.com/rolehippie/haproxy/compare/v4.4.0...v4.5.0) (2026-10-12)
 
 ### Dependencies
